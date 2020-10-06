@@ -9,6 +9,12 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage{changepage}
+\usepackage{multicol}
+\usepackage{nccmath}
+\usepackage{amsmath}
+\usepackage{calc}
+\usepackage{enumitem}
+\usepackage[linewidth=1.2pt,linecolor=red]{mdframed}
 
 % For fancy math
 \RequirePackage{amsmath,amsthm,amssymb}
@@ -20,6 +26,10 @@
 \newcommand{\ord}[2][th]{\ensuremath{{#2}^{\mathrm{#1}}}}
 % shorthand for \mathcal{O}
 \newcommand{\Ocal}{\ensuremath{\mathcal{O}}}
+\newcommand{\aug}{\fboxsep=-\fboxrule\!\!\!\fbox{\strut}\!\!\!}
+\newcommand{\contradiction}{%
+  \ensuremath{{\Rightarrow\mspace{-2mu}\Leftarrow}}%
+}
 
 % Counters for HW number, author, and collaborators
 \newcommand{\hwnumber}[1]{\def\hwnumberdata{#1}}
@@ -28,7 +38,6 @@
 \def\authordata{\relax}
 \newcommand{\collaborators}[1]{\def\collaboratorsdata{#1}}
 \def\collaboratorsdata{\relax}
-
 
 % Fancy headings
 \RequirePackage{fancyhdr}
@@ -56,13 +65,19 @@
 
 \newcounter{partnum}
 \setcounter{partnum}{0}
-\newenvironment{ppart}
-  {\addmedskip
-   \noindent\stepcounter{partnum}\textbf{\roman{partnum})}\ }
-  {\par\addbigskip}
 
+\newenvironment{ppart}[1][]{%
+  \addmedskip
+  \refstepcounter{partnum}%\par\medskip%
+  \enumerate[labelsep=*]\item[\textbf{\roman{partnum})}]}
+  {\endenumerate}
+
+\newsavebox{\mybox}
 \newenvironment{answer}
-  {\begin{adjustwidth}{\parindent}{}\setlength{\parindent}{0pt}}{\end{adjustwidth}}
+{\begin{lrbox}{\mybox}\begin{minipage}{0.95\textwidth}\vspace{0.2cm}}
+  {\vspace{0.1cm}\end{minipage}\end{lrbox}\fbox{\usebox{\mybox}}}
+
+\newenvironment{customProof}{\begin{proof}\noindent}{\end{proof}}
 
 % Put your name and the homework number here.
 \author{Jiun-Yan (Eric) Chen}
@@ -71,95 +86,25 @@
 
 \begin{document}
 \vspace*{0.5\baselineskip}
-\textbf{Please limit your answer to the following problems to at most 1/2 a page each.} 
+\textbf{Please limit your answer to the following problems to at most 1/2 a page each.}
 
-\collaborators{None} % Put your collaborators for Problem 1 here.
-
+\collaborators{None} % Put your collaborators the problem here
 \begin{problem}
-    You are given an integer $t$ and a polynomial $p(x)$ of degree $n$ where all of the $n+1$ coefficient $a_i$ of $p$ are non-zero integers. You want to compute $p(t)$.
-    
-    \begin{ppart}
-    How many integer additions and integer multiplications does it take to compute $p(t)$ the normal way, i.e. plugging in $t$ for $x$ wherever $x$ occurs in $p(x)$ and then computing each term $a_it^i$ from left to right and summing the values as you go?
-    \end{ppart}
-    
-    \begin{answer}
-      To resolve each $a_it^i$, there is a multiplication step $a_i \times t \times t \times ... \times t$ where there are $i$ $t$s
-      
-      So for each term, there is $i+1$ multiplication steps. As there is $i+1$ terms, the total multiplications count is:
-      
-      \begin{equation*}
-        \sum^{i+1}_{n=1} n = \frac{i+1(i+2)}{2}
-      \end{equation*}
 
-      To sum up all terms in $p(t)$, there is $a_it^i + a_{i-1}t^{i-1} ... + a_0$, where there are $i$ additions, as there are total of $i+1$ terms.
-    \end{answer}
+\begin{ppart}
+\end{ppart}
 
-    \begin{ppart}
-    Now see if you can find a better method to compute $p(t)$, using fewer than $\Ocal(n^2)$ adds and multiplies. Describe your method and explain clearly how many arithmetic operations it uses.
-    \end{ppart}
 
-    \begin{answer}
-      
-    \end{answer}
-    
-    % Put your solution here
 \end{problem}
 
 \newpage
 
-\collaborators{None} % Put your collaborators for Problem 2 here.
-\begin{problem}
-    A \textit{permutation matrix} $P$ is an $n \times n$ Boolean matrix with exactly one $1$ in each row and one $1$ in each column. It is called a permutation matrix because if you multiply $P$ by any $n \times 1$ column vector $v$ then the result $Pv$ is a permutation of $v$.
-    
-    \begin{ppart}
-    Permutation matrices are invertible. Explain how to construct the inverse of a permutation $P$ from $P$. 
-    \end{ppart}
-    
-    % Put your solution here
-    
-    \begin{ppart}
-    What are the possible values of the determinant of $P$? Explain why your answer is true.
-    \end{ppart}
-    
-    % Put your solution here
-    
-    \begin{ppart}
-    Let $P = \begin{bmatrix} 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \\ 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \end{bmatrix}$. Construct the inverse of $P$ and compute the determinant of $P$.
-    \end{ppart}
-    
-    % Put your solution here
-\end{problem}
-
-\newpage
-
-\collaborators{None} % Put your collaborators for problem 3 here
-
+\collaborators{None} % Put your collaborators the problem here
 \begin{problem}
 
-    \begin{ppart}
-    Prove that the product of $2$ lower triangular matrices is also lower triangular.
-    \end{ppart}
-    
-    % Put your solution here
-    
-    \begin{ppart}
-    Prove that the determinant of an upper triangular matrix is the product of its diagonal elements.
-    \end{ppart}
-    
-    % Put your solution here
-    
-    \begin{ppart}
-    Give an example of two $3 \times 3$ triangular matrices whose product is not triangular.
-    \end{ppart}
-    
-    % Put your solution here
-    
-    \begin{ppart}
-    Give an example of a non-singular $3 \times 3$ matrix $M$ which has no $LU$ decomposition, i.e. $M$ is not equal to $LU$ for an $L$ and $U$ where $L$ is unit triangular and $U$ is upper triangular.
-    \end{ppart}
-    
-    % Put your solution here
+\begin{ppart}
+\end{ppart}
+
 
 \end{problem}
-
 \end{document}

@@ -9,6 +9,12 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage{changepage}
+\usepackage{multicol}
+\usepackage{nccmath}
+\usepackage{amsmath}
+\usepackage{calc}
+\usepackage{enumitem}
+\usepackage[linewidth=1.2pt,linecolor=red]{mdframed}
 
 % For fancy math
 \RequirePackage{amsmath,amsthm,amssymb}
@@ -20,6 +26,10 @@
 \newcommand{\ord}[2][th]{\ensuremath{{#2}^{\mathrm{#1}}}}
 % shorthand for \mathcal{O}
 \newcommand{\Ocal}{\ensuremath{\mathcal{O}}}
+\newcommand{\aug}{\fboxsep=-\fboxrule\!\!\!\fbox{\strut}\!\!\!}
+\newcommand{\contradiction}{%
+  \ensuremath{{\Rightarrow\mspace{-2mu}\Leftarrow}}%
+}
 
 % Counters for HW number, author, and collaborators
 \newcommand{\hwnumber}[1]{\def\hwnumberdata{#1}}
@@ -28,7 +38,6 @@
 \def\authordata{\relax}
 \newcommand{\collaborators}[1]{\def\collaboratorsdata{#1}}
 \def\collaboratorsdata{\relax}
-
 
 % Fancy headings
 \RequirePackage{fancyhdr}
@@ -56,13 +65,19 @@
 
 \newcounter{partnum}
 \setcounter{partnum}{0}
-\newenvironment{ppart}
-  {\addmedskip
-   \noindent\stepcounter{partnum}\textbf{\roman{partnum})}\ }
-  {\par\addbigskip}
 
+\newenvironment{ppart}[1][]{%
+  \addmedskip
+  \refstepcounter{partnum}%\par\medskip%
+  \enumerate[labelsep=*]\item[\textbf{\roman{partnum})}]}
+  {\endenumerate}
+
+\newsavebox{\mybox}
 \newenvironment{answer}
-  {\begin{adjustwidth}{\parindent}{}\setlength{\parindent}{0pt}}{\end{adjustwidth}}
+{\begin{lrbox}{\mybox}\begin{minipage}{0.95\textwidth}\vspace{0.2cm}}
+  {\vspace{0.1cm}\end{minipage}\end{lrbox}\fbox{\usebox{\mybox}}}
+
+\newenvironment{customProof}{\begin{proof}\noindent}{\end{proof}}
 
 % Put your name and the homework number here.
 \author{Jiun-Yan (Eric) Chen}
@@ -125,7 +140,6 @@
       Thus the total complexity for calculating a polynomial is $\Ocal(2n + n) = \Ocal(n)$ if caching is allowed, or $\Ocal(n\log{n} + n) = \Ocal(n\log{n})$ if not.
       \end{answer}
     
-    % Put your solution here
 \end{problem}
 
 \newpage
@@ -138,19 +152,66 @@
     Permutation matrices are invertible. Explain how to construct the inverse of a permutation $P$ from $P$. 
     \end{ppart}
     
-    % Put your solution here
+    \begin{answer}
+      We define:
+      $P = 
+      \begin{bmatrix}
+        a_1 & a_1 & a_1 & a_1 \\
+        b_2 & b_2 & b_2 & b_2 \\
+        c_3 & c_3 & c_3 & c_3 \\
+        d_4 & d_4 & d_4 & d_4 
+      \end{bmatrix}$, 
+      $P^{-1} = 
+      \begin{bmatrix}
+        e_1 & f_1 & g_1 & h_1 \\
+        e_2 & f_2 & g_2 & h_2 \\
+        e_3 & f_3 & g_3 & h_3 \\
+        e_4 & f_4 & g_4 & h_4 
+      \end{bmatrix}$
+      
+      \nline 
+      
+      where for $a_i, b_i, c_i, d_i$, there is one '1' for each series $^{(1)}$, and $PP^{-1} = I$. \\      
+      By matrix multiplication, we have the following
+      
+      \begin{equation*}
+        \sum^4_{i = 1} a_i \times e_i = 1, \qquad
+        \sum^4_{i = 1} b_i \times f_i = 1, \qquad
+        \sum^4_{i = 1} c_i \times g_i = 1, \qquad
+        \sum^4_{i = 1} d_i \times h_i = 1
+      \end{equation*}\\
+      and all other series combinations being 0, then because of $^{(1)}$, $a_i = e_i, b_i = f_i, c_i = g_i, d_i = h_i$. Thus, $P^{-1}$, or the inverse of $P$, is naturally also the transpose of $P$.
+    \end{answer}
     
     \begin{ppart}
     What are the possible values of the determinant of $P$? Explain why your answer is true.
     \end{ppart}
+
+    \begin{answer}
+      The only possible values are $1$ and $-1$. Since the only elementary row operations needed to transform a permutation matrix $P$ into an indentity matrix $I$ is the row swap, and no row addition or multiplication is needed, the determinant of $P$ must be equal to the determinant of $I$ (which is equal to 1), times the amount $-1^i$, where $i$ is the amount of row swaps needed.
+    \end{answer}
     
-    % Put your solution here
+    \bigskip
     
     \begin{ppart}
     Let $P = \begin{bmatrix} 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \\ 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \end{bmatrix}$. Construct the inverse of $P$ and compute the determinant of $P$.
     \end{ppart}
-    
-    % Put your solution here
+
+    \begin{answer}
+        The inverse of $P$: $P^{-1} = P^T = 
+        \begin{bmatrix}
+          0 & 0 & 1 & 0\\
+          0 & 0 & 0 & 1\\
+          1 & 0 & 0 & 0\\
+          0 & 1 & 0 & 0\\
+        \end{bmatrix}$
+
+      \nline
+
+      The following steps is needed to transform $P$ into $I$: $r_1 \leftrightarrow r_3, r_2 \leftrightarrow r_4$\\
+      Thus, the determinant of $P$ is $-1^2 = 1$
+    \end{answer}
+
 \end{problem}
 
 \newpage
@@ -163,26 +224,88 @@
     Prove that the product of $2$ lower triangular matrices is also lower triangular.
     \end{ppart}
     
-    % Put your solution here
+    \begin{answer}
+      \begin{customProof}
+        Let $A$, $B$, be a lower triangular matrix of size $k \times x$ with elements $a_{i,j}/b_{i,j}$, $C = AB$
+          
+          \begin{align*}
+            c_{i,j} &= \sum_1^k a_{i,n} b_{n,j} \\
+            &= \sum_1^i a_{i,n} b_{n,j} & (a_{i,n} = 0 \textrm{ when $i < n$})\\
+            &= \sum_j^i a_{i,n} b_{n,j} & (b_{n,j} = 0 \textrm{ when $n < j$})
+          \end{align*}
+          
+          $\therefore c_{i,j} = 0$ when $i < j$, $\implies C$ must also be a lower triangular matrix.
+        \end{customProof}
+    \end{answer}
     
     \begin{ppart}
     Prove that the determinant of an upper triangular matrix is the product of its diagonal elements.
     \end{ppart}
     
-    % Put your solution here
-    
+    \begin{answer}
+      \begin{customProof}
+        Let $A$ be an upper triangular matrix,$B$ be a diagonal matrix that can be made by performing row additions on $A$. By definition, $B$ must exist, and $det(B) = $ {\it the product of it's diagonal elements}, therefore $det(A) = det(B) = $ {\it product of it's diagonal elements.}
+      \end{customProof}
+    \end{answer}
+      
     \begin{ppart}
     Give an example of two $3 \times 3$ triangular matrices whose product is not triangular.
     \end{ppart}
     
-    % Put your solution here
+    \begin{answer}
+      Let $A = \begin{bmatrix}
+        1 & 1 & 1 \\
+        0 & 1 & 1 \\
+        0 & 0 & 1
+      \end{bmatrix}$
+      $B = \begin{bmatrix}
+        1 & 0 & 0 \\
+        1 & 1 & 0 \\
+        1 & 1 & 1
+      \end{bmatrix}$
+      $AB = \begin{bmatrix}
+        3 & 2 & 1 \\
+        2 & 2 & 1 \\
+        1 & 1 & 1
+      \end{bmatrix}$, 
+      
+      \nline
+
+      $\implies AB$ is not a triangular matrix.
+    \end{answer}
     
     \begin{ppart}
     Give an example of a non-singular $3 \times 3$ matrix $M$ which has no $LU$ decomposition, i.e. $M$ is not equal to $LU$ for an $L$ and $U$ where $L$ is unit triangular and $U$ is upper triangular.
     \end{ppart}
     
-    % Put your solution here
+    \begin{answer}
+      \begin{customProof}
+        Let $A = \begin{bmatrix}
+          0 & 0 & 1 \\
+        0 & 1 & 1 \\
+        1 & 1 & 1
+      \end{bmatrix}$, supposed $A$ has an $LU$ decomposition, 
+      
+      \nline
 
+      where 
+      $L = \begin{bmatrix}
+        1 & 0 & 0 \\
+        l_{2,1} & 1 & 0 \\
+        l_{3,1} & l_{3,2} & 1 \\
+      \end{bmatrix}$,
+      $U = \begin{bmatrix}
+        u_{1,1} & u_{1,2} & u_{1,3} \\
+        0 & u_{2,2} & u_{2,3} \\
+        0 & 0 & u_{3,3} \\
+      \end{bmatrix}$
+
+      \nline
+      
+      Since $0 = \sum_{i=1}^3 l_{1,i} u_{i,1} = u_{1,1}$, and $1 = \sum_{i=3}^3 l_{3,i} u_{i,1} = l_{3,1} u_{1,1} = 0 \contradiction, \\\therefore A$ does not have an $LU$ decomposition where L is a unit lower triangular
+    \end{customProof}
+  \end{answer}
+    
 \end{problem}
 
 \end{document}
