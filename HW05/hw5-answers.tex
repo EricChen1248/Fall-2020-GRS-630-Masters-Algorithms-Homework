@@ -94,31 +94,24 @@
 
 \collaborators{None} % Put your collaborators for the problem here
 \begin{problem}
-    Consider the graphs G given.
 
-    \begin{ppart}
-        State the size of the min-cut G, state how many min cuts G has and list them. What is the size of thet max cut of G. List all of G's max-cuts.
-    \end{ppart}
-
+    \nline
+    
     \begin{answer}
-        Min-Cuts:
-        
-        \includegraphics[scale=0.5]{1-1.png}
+        We can reduce the Boolean Satisfiability Problem into a Clique Problem.
 
-        Max-Cuts:
+        For each variable in SAT in the conjunctive normal form, we create a vertex representing this this variable, along with a secondary value denoting the group number. (Use the order of the group in SAT for simplicity).
 
-        \includegraphics[scale=0.5]{1-2.png}
+        Connect each vertex in our graph to another vertex if:
+    
+        1. The other vertex has is not the opposite ($x_1$, $\neg x_1$ are opposites)
+        2. The other vertex is in a different group.
 
-        The min-cut size is 1, and there are 2 min-cuts, the max-cut size is 4.
+        The original problem is satisfiable if there is a clique of size $m$, where $m$ is the number of groups in the equation, in this generated graph.
+
+        Since we can perform this transformation in $n^2$ time, and we know that SAT is also NP. That means that the Clique Problem is also in NP.
     \end{answer}
 
-    \begin{ppart}
-        Compute the exact probability that the algorithm will find a min cut of graph G after running the contraction algorithm once. Show your work in doing this computation.
-    \end{ppart}
-
-    \begin{answer}
-         Probability of last contraction being 2-3 or 4-5 is $4! \times 2 / 5! = \frac{2}{5}$
-    \end{answer}
 \end{problem}
 
 \newpage
@@ -126,117 +119,141 @@
 \collaborators{None} % Put your collaborators the problem here
 \begin{problem}
 
+    The problem here is to give an example of a complete weighted but NON-Euclidean graph G with 4 or 5 vertices which has the property that when you run the 2-approximation for the traveling saleman problem on the graph, you obtain a TSP solution whose value is more than 20 times the optimal TSP solution for that graph.
+
     \begin{ppart}
-        Prove that the maximum number of min-cuts that a graph of n vertices can have is $\Ocal(n(n-1)/2)$.
+        Draw your example weight graph G, and state whawt makes it non-Euclidean.
     \end{ppart}
 
     \begin{answer}
-       The probability of the Randomize Min-Cut algorithm of finding a min-cut is $2/(n(n-1))$.
+        \noindent\begin{minipage}{0.3\textwidth}% adapt widths of minipages to your needs
+            \includegraphics[scale=0.4]{2-1.png}
+            \end{minipage}%
+            \hfill%
+            \begin{minipage}{0.6\textwidth}
+                This is non-euclidean because the triangle formed by A, B, C have the edges 1, 2, 1000, which is an impossible euclidean triangle.
+            \end{minipage}
+    \end{answer}
 
-       \hrulefill
-       
-        Proof:
+    \begin{ppart}
+        Show what the optimal solution for G is, and if possible explain your answer.
+    \end{ppart}
+
+
+    \begin{answer}
+        The optimal solution is the path A-D-C-B-A, which gives a total path cost of 6.
+    \end{answer}
+
+    \begin{ppart}
+        Give the result of running the 2-approximation algorithm and show the steps you went through to get this approximation.
+    \end{ppart}
+
+    \begin{answer}
+        Start with node A.
+        
+        1. Next minimum cost node is B
+
+        2. Next minimum cost node is D
+
+        3. Next minimum cost node is C
+
+        4. Add A back into the list.
+
+        Total cost for A-B-D-C-A is 1003.
+    \end{answer}
+
+    \nline
+
+    Give an example of a complete Euclidean graph on G with at least 4 vertices where the 2 approximation for the traveling salesman problem on the graph G yields a TSP solution whose value is more than 1.6 times the optimal TSP soluiton for that graph. Show enough of your work so that the validity of your example is clear.
+
+    \begin{answer}
+       \includegraphics[scale=0.4]{2-2.png}
+    \end{answer}
+\end{problem}
+
+\newpage
+
+\begin{problem}
+    Suppose that we are given a set of n objects, where the size $s_i$ of the $i$h object satisfies $0 < s_i < 1$. We wis hto pack all the objects into the minimum nnumber of unit-size bins. Each bin can hold any subset of the objects whose total size does not exceed 1.
+
+    \begin{ppart}
+        Prove that the problem of determining the minimum number of bins required is NP-hard.
+    \end{ppart}
+
+    \begin{answer}
+        The bin-packing problem is an optimization problem that has the corresponding decision problem of whether the objects can be packed into some number of bins.
+
+        We can generalize this into solving a subset sum problem where we are trying to find a subset of items that has sums closest to 1, and we repeat this problem n times for n bins.
+
+        Since we know that the subset problem is NP-Hard, and the bin-packing problem is at least as hard as the subset problem, therefore, bin-packing problem is also NP-Hard
+    \end{answer}
+
+    \begin{ppart}
+        Argue that the optimal number of bins required is at least $\lceil S \rceil$
+    \end{ppart}
+
+    \begin{answer}
+        The amount of spaces need without regards to bin size limitations would be the sum size of each item, or S. Since each bin is a unit size, there must be at least $\lceil S \rceil $ bin to have a total size of S or more
+    \end{answer}
+
+    \begin{ppart}
+        Argue that the first-fit heuristic leaves at most one bin less than half full.
+    \end{ppart}
+
+    \begin{answer}
+        For a first-fit algorithm to place to create a new bin, there must not be an earlier bin that can fit this new item. If this new item $I$ creates a bin that is less than half full, and there was previously already a bin $B$ that was less than half full, then the sum of the item $I$ and the items in $B$ would be less than 1, and thus $I$ would not be placed into a new bin. Thus a second bin that is less than hal full would never be created if there was previously a bin that was also less than half full. Thus, the first-fit heuristic must always leave at most one bin less than half full.
+    \end{answer}
+
+    \begin{ppart}
+        Prove that the number of bins used by the first-fit heuristic is never more than $\lceil 2S \rceil$
+    \end{ppart}
+
+    \begin{answer}
+        From our previous problem we know that there must be at most 1 bin that is less than half full. This means that for a solution of K + 1 bins, there are K bins which are at least half full. Let the amount stored in the last bin be of size B. As these K bins will have a minimal stored item sum sie of 0.5K, we know that $0.5K + B < S$, which can be translated into $K < 2(S - B) => K < 2S$. Therefore, the number of bins used is never more than $\lceil 2S \rceil$
+    \end{answer}
+
+    \begin{ppart}
+        Prove an approximation ratio of 2 for the first-fit heuristic
+    \end{ppart}
+
+    \begin{answer}
+        From \textbf{ii} we know that the minimal amount of bins required is $\lceil S \rceil$, and from \textbf{iv} we know that the maximum amount of bins is less than $\lceil 2S \rceil$. 
+
+        \nline
+
+        Let $U = \lceil S \rceil - S, V = \lceil 2S \rceil - 2S$, $2 \lceil S \rceil = 2S + 2U$. If $U > 0.5$, then $V < 0.5 < 2U$. If $U < 0.5, V < 2U$. Therefore, $\lceil 2S \rceil = 2S + V < 2S + 2U = 2 \lceil S \rceil$, and the first-fit heuristic has an approximation ratio of 2.
+    \end{answer}
+\end{problem}
+
+\newpage
+
+\begin{problem}
+    Recall the greedy set cover algorithm which was discussed in section and in our textbook. For this heuristic every step of the algorithm adds to the set cover the set i F which covers the most elements from U which are not yet covered by the algorithm.
     
-        If a graph has a min-cut of size k, than each vertex must have a minimum degree of k. Therefore the amount of edges that the graph can have is $|E| >= \frac{kn}{2}$.
-
-        For a min-cut, the probability of a contraction not being an edge in the min-cut is 
+    \begin{ppart}
+        True or false: There is an instance I of the set cover problem on which the greedy set cover algorithm produces an answer which is $\ge OPT(I) + 2$. Explain your answer
+    \end{ppart}
+    
+    \begin{answer}
+        \includegraphics[scale = 0.5]{4-1.png}
         
-        $1 - \frac{k}{|E|} >= 1 - \frac{2}{n}$. For each additional step i, the conditional probability of the new edge not being a min-cut $Pr >= 1 - \frac{2}{n-i}$
-
-        Therefore, the probability of success $Pr = (1 - \frac{2}{n})(1 - \frac{2}{n-1})(1 - \frac{2}{n-2})...(1 - \frac{2}{3}) >= \frac{2}{n(n-1)}$
-
-        \hrulefill
-
-        Since for each min-cut, there is a $\frac{2}{n(n-1)}$ probabilty of the algorithm succeeding, there must be at most $1 / \frac{2}{n(n-1)} = \frac{n(n-1)}{2}$ min-cuts, as the sum of the probability is bound to 1. 
-        
-        (Can be summed because each min-cut's probability is independent of one another)
+        In the above instance the greedy set cover algorithm will select all covers (6), when the optimal is to just select the 4 horizontal covers.
     \end{answer}
 
+
     \begin{ppart}
-        Give an example of a graph of at least $k > 5$ vertices which has at least k(k-1)/2 min-cuts.
+        Show that the following inequality is always true for the greedy set cover algorithm: 
+        
+        $|C| \le |C^*| \times (\text{the size of the largest set in } F)$, 
+        
+        where C is set cover found by the greedy algorithm, and C* is the optimal set cover. Explain/justify your answer.
     \end{ppart}
 
     \begin{answer}
-        \includegraphics[scale=0.5]{2-2.png}
-    \end{answer}
-\end{problem}
-
-\newpage
-
-\begin{problem}
-    Assume you have a list of N, $N > 10,000$, numbers from 1 to 100 and you know that more that .7 of the N numbers are the same (say T)
-
-    \begin{ppart}
-        Write a Monte Carlo algorithm which determines the number T with high probability
-
-        Specifically your algorithm should,
-
-        - run for some constant number of steps not depending on N, and
-
-        - output the value T with probability at least .8
-
-        You should state the time complexity and error bounds of your algorithm and explain why your algorithm achieves these times and error bounds.
-    \end{ppart}
-    \begin{answer}
-        Pick k random number from the list. T is the number that appears the most often.
-
-        The probability of this being wrong decreases with a higher k. 
-
-        The worst case scenario is 0.7 of the list is T, and 0.3 is another number S.
-
-        The probability of getting it wrong is the poisson distribution equation 
+        $|C^*|$ implies that the largest set size is at least $\frac{|F|}{|C^*|}$. This also implies that when the greedy algorithm picks this largest set, there must be a set that also covers at least $\frac{1}{|C^*|}$ of the remaining points. This means that for each nth iteration of the algorithm, there will be at most $|F|(1-\frac{1}{|C^*|})^{ln\frac{n}{|C*|}}$ points remaining. Therefore |C| is at most n where n is the smallest integer that lets $|F|(1-\frac{1}{|C^*|})^{ln\frac{n}{|C^*|}} <= |C^*|$. 
         
-        $Pr = \sum^{k/2}_{i=0} \binom{k}{i} 0.7^i 0.3^{k-i}$
-
-        Thus $Pr > 0.8$ when $k >= 8$. 
-        
-        Thus if k = 8, our algorithm will have a probability of being correct at least $80\% $ of the time
-
-
+        Thus, $|C| \le |C^*|ln|F| \le |C^*|ln\frac{|F|}{|C^*|} + |C^*| \le |C^*|\frac{|F|}{|C^*|} \le |C^*| \times (\text{the size of the largest set in } F)$ 
     \end{answer}
-
-    \begin{ppart}
-        Is it possible to find an efficient Las Vegas algorithm to solve this problem? That is, is there an algorithm which never makes an error and which finds the majority element in expected time $\Ocal(log N)$. Why or why not? Explain your reasoning.
-    \end{ppart}
-
-    \begin{answer}
-        There is no Las Vegas algorithm capable that works in $\Ocal(logN)$ time.
-
-        Any random sampling algorithm will always have a chance of picking numbers that are not the majority. This probability can be reduced by increasing the sampling amount, up to $0.3N + 1$ samplings with the lowest error rate (0\%). However, as the size of the list grows, the sampling requirements also increases to keep it at 0\% at $\Ocal(N)$ time. Thus, there is no algorithm that can never make an error and also complete in $\Ocal(logN)$ time.
-    \end{answer}
-
 \end{problem}
-
-\newpage
-
-\begin{problem}
-    Let's slightly change the randomized min-cut algorithm discussed in class as follows: Instead of choosing an edge to contract, we randomly choose 2 vertices (which may or may not be connected by any edge) and contract them into 1 vertex by contracting them into a single vertex.
-
-    Show that there are input graphs for which this new min-cut algorithm finds a min-cut with only exponentially small probability. That is, describe a specific graph with n vertices for which the contraction algorithm is likely to run for exponentially many iterations (in n) before it finds the min-cut in the graph. Explain your reasoning.
-\end{problem}
-
-\begin{answer}
-    Take a graph G, where there are two n-complete graphs g1, g2, and a single edge between one vertex of g1 and g2 (lets call them i, j). The min-cut of this graph must be the cut on the edge between i and j
-
-    \nline
-
-    The algorithm will error out whenever it contracts vertices where one belongs in g1 and one belongs in g2.
-
-    \nline
-
-    As there are  a total of 2n vertices, there will need to be 2n-2 contractions. (n-1 for g1, g2 each.)
-
-    \nline
-
-    The chance of picking correct is therefore $Pr = \frac{(n-1)!(n-1)!}{2n!/2} = \frac{2 (n-1)(n-2)(n-3)...(n-n+1)}{(2n)(2n-1)(2n-2)...(2n-n+1)(2n-n)} \approx \frac{1}{n^2 \times 2^n}$, 
-
-    \nline
-
-    Thus, we have shown that there is at least one type of graph in which the algorithm has an exponentially small probability of getting the correct min-cut.
-
-    \nline
-
-    This is different to the original algorithm because there is only the single edge between i and j that will cause an error if contracted.
-\end{answer}
-
-\end{document}
+    
+    \end{document}
